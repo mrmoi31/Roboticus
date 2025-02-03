@@ -9,23 +9,9 @@
 const int largeur = 7;
 const int longueur = 7;
 
-//struct Intello {
-//	int vie = 1;
-//	int dgt = 1;
-//	int cout = 1;
-//	int joueur = 0;
-//};
-
 //struct Surdoue {
 //	int vie = 4;
 //	int dgt = 4;
-//	int cout = 2;
-//	int joueur = 0;
-//};
-
-//struct Combattant {
-//	int vie = 2;
-//	int dgt = 2;
 //	int cout = 2;
 //	int joueur = 0;
 //};
@@ -90,12 +76,18 @@ int main() {
 	display();
 
 	play:
+	//***************************
+	// Boucle de jeu
+	//***************************
 	while (!end) {
 		std::cout<< "Tour de joueur " << joueurs[round%2] <<std::endl;
 		std::cout<< "Phase de placement" << std::endl;
 		std::cout<<"-------------------"<< std::endl;
 
 		do {
+			//***************************
+			//Menu de choix
+			//***************************
 			std::cout << color[round%2];
 			std::cout << "Choix :" << std::endl;
 			std::cout << "- 1 : Intello" << std::endl;
@@ -122,6 +114,9 @@ int main() {
         }
 		std::cout << TC_RES;
 
+		//***************************
+		//Gestion pose troupe j2
+		//***************************
 		col = int(colonne) - 65;
 		if (round%2 == 0) {
 			for (int i = longueur - 1; i >= 0; i--) {
@@ -146,6 +141,9 @@ int main() {
             	}
         	}
 		}
+		//***************************
+		//Gestion pose troupe j1
+		//***************************
 		else {
 			for (int i = 0; i <= longueur; i++) {
             	if (board[i][col].type == "          ") {
@@ -173,17 +171,23 @@ int main() {
 
 		std::cout<< "Phase de combat" << std::endl;
 		std::cout<<"-------------------"<< std::endl;
-
+		//std::cout << color[round%2];
 		
 		for (int i = 0; i < largeur; ++i){
 			for (int j = 0; j < longueur; ++j){
 				if (board[i][j].type != "          "){
 					
+					//***************************
+					//Gestion déplacement j1
+					//***************************
 					if (board[i][j].joueur == 1 && board[i-1][j].type == "          "){
 						board[i-1][j] = board[i][j];
 						board[i][j].type = "          ";
 					}
 
+					//***************************
+					//Gestion vie et degat j1
+					//***************************
 					if (i == 0 && board[i][j].joueur == 1){
 						joueur2.vie -= board[i][j].dgt;
 						board[i][j].type = "          ";
@@ -197,10 +201,16 @@ int main() {
 		for (int i = largeur - 1; i > largeur; ++i){
 			for (int j = longueur - 1; j > 0; ++j){
 				if (board[i][j].type != "          "){
+					//***************************
+					// Gestion deplacement j2
+					//***************************
 					if (board[i][j].joueur == 2 && board[i+1][j].type == "          "){
 						board[i+1][j] = board[i][j];
 						board[i][j].type = "          ";
 					}
+					//***************************
+					// Gestion dgt et vie j2
+					//***************************
 					if (i == longueur && board[i][j].joueur == 2){
 						joueur1.vie -= board[i][j].dgt;
 						board[i][j].type = "          ";
@@ -221,6 +231,9 @@ int main() {
 		//combat
 		//si 2 à coté same type fusion
 
+		//***************************
+		//Gestion victoire
+		//***************************
 		if (joueur1.vie <= 0 || joueur2.vie <= 0){
 			end = true;
 			break;
