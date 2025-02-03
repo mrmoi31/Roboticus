@@ -45,7 +45,15 @@ struct Roboticus {
 	std::string type = "          ";
 };
 
+struct Joueur {
+	int vie = 10;
+	int mana = 5;
+	int num = 0;
+};
+
 Roboticus board[largeur][longueur];
+Joueur joueur1;
+Joueur joueur2;
 
 void display() {
 	std::cout<<"///|      A       |      B       |      C       |       D      |       E      |       F      |       G      |"<<std::endl;
@@ -69,6 +77,10 @@ void display() {
 int main() {
 	bool end = false;
 	int joueurs[2] = {1,2};
+	joueur1.num = 1;
+	joueur2.num = 2;
+	//int joueur1 = 10;
+	//int joueur2 = 10;
 	std::string color[2] = {TC_RED, TC_BLU};
 	int round = 0;
 	int choix = 0;
@@ -111,8 +123,6 @@ int main() {
 		std::cout << TC_RES;
 
 		col = int(colonne) - 65;
-		std::cout << col << std::endl;
-
 		if (round%2 == 0) {
 			for (int i = longueur - 1; i >= 0; i--) {
             	if (board[i][col].type == "          ") {
@@ -129,8 +139,6 @@ int main() {
             			board[i][col].cout = 2;
             			board[i][col].joueur = joueurs[round%2];
             		}
-            		display();
-
             	    break;
             	} else if (i == 0 ) {
             	    std::cout << "La colonne est remplie\n";
@@ -154,8 +162,6 @@ int main() {
             			board[i][col].cout = 2;
             			board[i][col].joueur = joueurs[round%2];
             		}
-            		display();
-
             	    break;
             	} else if (i == longueur ) {
             	    std::cout << "La colonne est remplie\n";
@@ -169,17 +175,63 @@ int main() {
 		std::cout<<"-------------------"<< std::endl;
 
 		
+		for (int i = 0; i < largeur; ++i){
+			for (int j = 0; j < longueur; ++j){
+				if (board[i][j].type != "          "){
+					
+					if (board[i][j].joueur == 1 && board[i-1][j].type == "          "){
+						board[i-1][j] = board[i][j];
+						board[i][j].type = "          ";
+					}
 
-		std::cout << "bientot oxala"<< std::endl;
+					if (i == 0 && board[i][j].joueur == 1){
+						joueur2.vie -= board[i][j].dgt;
+						board[i][j].type = "          ";
+						board[i][j].dgt = 0;
+					}
+
+				}
+			}
+		}
+
+		for (int i = largeur - 1; i > largeur; ++i){
+			for (int j = longueur - 1; j > 0; ++j){
+				if (board[i][j].type != "          "){
+					if (board[i][j].joueur == 2 && board[i+1][j].type == "          "){
+						board[i+1][j] = board[i][j];
+						board[i][j].type = "          ";
+					}
+					if (i == longueur && board[i][j].joueur == 2){
+						joueur1.vie -= board[i][j].dgt;
+						board[i][j].type = "          ";
+						board[i][j].dgt = 0;
+					}
+				}
+			}
+		}
+
+		std::cout << "joueur1 ";
+		std::cout << joueur1.vie << std::endl;
+		std::cout << "joueur2 ";
+		std::cout << joueur2.vie << std::endl;
+		std::cout << TC_RES;
 		
 		display();
-		//- 1 placer
-		//- 2 avancer
+
+		//combat
 		//si 2 à coté same type fusion
-		//si robot traverse board dgt to joueur
+
+		if (joueur1.vie <= 0 || joueur2.vie <= 0){
+			end = true;
+			break;
+		}
 
 		round++;
 	}
+
+	std::cout << "*************************************" << std::endl;
+	std::cout << "Victoire de joueur " << joueurs[round%2] << std::endl;
+	std::cout << "*************************************" << std::endl;
 
 	return 0;
 }
