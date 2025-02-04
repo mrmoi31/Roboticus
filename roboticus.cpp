@@ -176,6 +176,19 @@ int main() {
 		for (int i = 0; i < largeur; ++i){
 			for (int j = 0; j < longueur; ++j){
 				if (board[i][j].type != "          "){
+
+					//***************************
+					// Gestion combat j1
+					//***************************
+					if (board[i][j].dgt > board[i-1][j].vie){
+						board[i-1][j].type = "          ";
+						board[i-1][j].vie = 0;
+					} else if (board[i][j].dgt == board[i-1][j].vie){
+						board[i-1][j].type = "          ";
+						board[i-1][j].vie = 0;
+						board[i][j].type = "          ";
+						board[i][j].vie = 0;
+					}
 					
 					//***************************
 					//Gestion déplacement j1
@@ -198,9 +211,23 @@ int main() {
 			}
 		}
 
-		for (int i = largeur - 1; i > largeur; ++i){
-			for (int j = longueur - 1; j > 0; ++j){
+		for (int i = largeur - 1; i >= 0; --i){
+			for (int j = longueur - 1; j >= 0; --j){
+				
+				//***************************
+				// Gestion combat j2
+				//***************************
 				if (board[i][j].type != "          "){
+					if (board[i][j].dgt > board[i+1][j].vie){
+						board[i+1][j].type = "          ";
+						board[i+1][j].vie = 0;
+					} else if (board[i][j].dgt == board[i+1][j].vie){
+						board[i+1][j].type = "          ";
+						board[i+1][j].vie = 0;
+						board[i][j].type = "          ";
+						board[i][j].vie = 0;
+					}
+
 					//***************************
 					// Gestion deplacement j2
 					//***************************
@@ -208,10 +235,11 @@ int main() {
 						board[i+1][j] = board[i][j];
 						board[i][j].type = "          ";
 					}
+					
 					//***************************
 					// Gestion dgt et vie j2
 					//***************************
-					if (i == longueur && board[i][j].joueur == 2){
+					if (i == longueur - 1 && board[i][j].joueur == 2){
 						joueur1.vie -= board[i][j].dgt;
 						board[i][j].type = "          ";
 						board[i][j].dgt = 0;
@@ -229,6 +257,7 @@ int main() {
 		display();
 
 		//combat
+		//refaire display
 		//si 2 à coté same type fusion
 
 		//***************************
